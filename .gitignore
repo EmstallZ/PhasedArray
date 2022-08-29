@@ -26,6 +26,7 @@ ipch
 *.VC.db
 *.VC.VC.opendb
 *.userprefs
+enc_temp_folder/
 
 #Build
 [Dd]ebug/
