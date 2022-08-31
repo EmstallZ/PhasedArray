@@ -2,10 +2,30 @@
 
 #include "settings_backend.h"
 
+bool* Element::getActivePointer()
+{
+    bool* ptr = &active;
+    return ptr;
+}
+
+float* Element::getPhasePointer() {
+    float* ptr = &phase;
+    return ptr;
+}
+
+float* Element::getAmplitudePointer() {
+    float* ptr = &amplitude;
+    return ptr;
+}
+
+float* Element::getFrequencyPointer() {
+    float* ptr = &frequency;
+    return ptr;
+}
 
 int Element::getUniqueID()
 {
-    return uniqueID;
+    return Element::uniqueID;
 }
 
 std::string Element::getName()
@@ -15,7 +35,7 @@ std::string Element::getName()
 
 bool Element::isActive()
 {
-    return active;
+    return Element::active;
 }
 
 Element::Element(std::string name, int uniqueID)

@@ -10,16 +10,20 @@ private:
     int uniqueID;
     std::string name;
 
-    double phase;
-    double amplitude;
-    double frequency;
-
+    float phase;
+    float amplitude;
+    float frequency;
     bool active;
 
 public:
+    bool* getActivePointer();
+    float* getPhasePointer();
+    float* getAmplitudePointer();
+    float* getFrequencyPointer();
+
     int getUniqueID();
     std::string getName();
-
+    
     bool isActive();
 
     Element(std::string name, int uniqueID);

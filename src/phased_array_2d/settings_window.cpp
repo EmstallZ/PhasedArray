@@ -7,6 +7,20 @@
 
 namespace SettingsMenu
 {
+    // Help marker
+    static void HelpMarker(const char* desc)
+    {
+        ImGui::TextDisabled("(?)");
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(desc);
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+    }
+
     // Settings window flags
     static bool no_titlebar = false;
     static bool no_scrollbar = false;
@@ -25,7 +39,6 @@ namespace SettingsMenu
     std::vector<Element> elementArray;
     char elementsCounterBuffer[50] = "Elements: 0";
     int selectedElement = 0;
-    bool disable = false;
     int uniqueIdCounter = 0;
     bool isDeletedElementLast = false;
 
@@ -41,6 +54,7 @@ namespace SettingsMenu
             ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y), ImGuiCond_Once);
             ImGui::SetNextWindowSize(ImVec2(300, 680), ImGuiCond_Once);
         }
+
         // Settings window flags
         ImGuiWindowFlags window_flags = 0;
         if (no_titlebar)        window_flags |= ImGuiWindowFlags_NoTitleBar;
@@ -64,12 +78,11 @@ namespace SettingsMenu
             elementArray.push_back(Element::Element("Placeholder", uniqueIdCounter++));
             // Needed in order to make the delete button available again
             isDeletedElementLast = false;
-            
         }
-        sprintf(elementsCounterBuffer, "Elements: %d", (int)elementArray.size());
-        ImGui::SameLine();
+        sprintf_s(elementsCounterBuffer, "Elements: %d", (int)elementArray.size());
+
         // Display element counter
-        ImGui::Text(elementsCounterBuffer);
+        ImGui::SameLine(); ImGui::Text(elementsCounterBuffer);
 
         // Element box
         if (ImGui::BeginListBox("##Element box", ImVec2(-FLT_MIN, 8 * ImGui::GetTextLineHeightWithSpacing())))
@@ -79,7 +92,7 @@ namespace SettingsMenu
                 // Set which element is selected
                 const bool isSelected = (selectedElement == n);
                 char selectableBuffer[50];
-                sprintf(selectableBuffer, "UID: %d, Name: %s, Phase: , Amplitude: ", elementArray[n].getUniqueID(), elementArray[n].getName().c_str());
+                sprintf_s(selectableBuffer, "UID: %d, Name: %s, Phase: , Amplitude: ", elementArray[n].getUniqueID(), elementArray[n].getName().c_str());
                 if (ImGui::Selectable(selectableBuffer, isSelected)) {
                     selectedElement = n;
                     // Needed in order to make the delete button available again
@@ -92,7 +105,8 @@ namespace SettingsMenu
             }
             ImGui::EndListBox();
         }
- 
+
+        // Start 'delete' button as disabled 
         ImGui::BeginDisabled(!elementArray.size() || isDeletedElementLast);
 
         if (ImGui::Button("Delete element"))
@@ -102,8 +116,33 @@ namespace SettingsMenu
             elementArray.erase(elementArray.begin() + selectedElement);
         }
 
+        ImGui::Separator();
+
+        // Display settings only of the selected element
+        if (elementArray.size() && !isDeletedElementLast)
+        {
+            ImGui::Checkbox("Enable", elementArray[selectedElement].getActivePointer());
+
+            ImGui::SliderAngle("Phase shift", elementArray[selectedElement].getPhasePointer());
+            ImGui::SameLine(); HelpMarker("CTRL+click to input value");
+
+            // Slider limits and step sizes
+            const float lim_amplitudeLow = 0.0f, lim_amplitudeHigh = 100.0f;
+
+            ImGui::SliderScalar("Amplitude", ImGuiDataType_Float, elementArray[selectedElement].getAmplitudePointer(), &lim_amplitudeLow, &lim_amplitudeHigh, "%.02f", ImGuiSliderFlags_None);
+            ImGui::SameLine(); HelpMarker("CTRL+click to input value");
+
+            // Slider limits and step sizes
+            const float lim_frequencyLow = 0.0f, lim_frequencyHigh = 100.0f;
+
+            ImGui::SliderScalar("Frequency", ImGuiDataType_Float, elementArray[selectedElement].getFrequencyPointer(), &lim_frequencyLow, &lim_frequencyHigh, "%.2f Hz", ImGuiSliderFlags_None);
+            ImGui::SameLine(); HelpMarker("CTRL+click to input value");
+
+            ImGui::Separator();
+        }
+
         ImGui::EndDisabled();
-        
+
 
         ImGui::End();
 
