@@ -146,6 +146,6 @@ namespace SettingsMenu
 
         ImGui::End();
 
-        ImGui::ShowDemoWindow();
+        //ImGui::ShowDemoWindow();
     }
 }
