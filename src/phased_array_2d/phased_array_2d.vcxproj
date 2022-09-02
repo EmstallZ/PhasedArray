@@ -167,7 +167,8 @@
     <ClCompile Include="..\..\imgui_widgets.cpp" />
     <ClCompile Include="..\..\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\..\backends\imgui_impl_vulkan.cpp" />
-    <ClCompile Include="app.cpp" />
+    <ClCompile Include="settings_backend.cpp" />
+    <ClCompile Include="settings_window.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +177,8 @@
     <ClInclude Include="..\..\imgui_internal.h" />
     <ClInclude Include="..\..\backends\imgui_impl_glfw.h" />
     <ClInclude Include="..\..\backends\imgui_impl_vulkan.h" />
-    <ClInclude Include="app.h" />
+    <ClInclude Include="settings_backend.h" />
+    <ClInclude Include="settings_window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\misc\debuggers\imgui.natvis" />

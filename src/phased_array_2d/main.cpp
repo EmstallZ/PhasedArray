@@ -20,7 +20,7 @@
 #include <vulkan/vulkan.h>
 
 // Application include
-#include "app.h";
+#include "settings_window.h";
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -363,7 +363,7 @@ int main(int, char**)
         return 1;
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+Vulkan example", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "Phased Array 2D", NULL, NULL);
 
     // Setup Vulkan
     if (!glfwVulkanSupported())
@@ -507,7 +507,7 @@ int main(int, char**)
         ImGui::NewFrame();
 
         // Application
-        MainApp::RenderApp();
+        SettingsMenu::RenderSettingsMenu();
 
         // Rendering
         ImGui::Render();
