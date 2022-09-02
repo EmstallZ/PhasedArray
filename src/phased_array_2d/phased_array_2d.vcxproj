@@ -167,6 +167,10 @@
     <ClCompile Include="..\..\imgui_widgets.cpp" />
     <ClCompile Include="..\..\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\..\backends\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="..\..\implot.cpp" />
+    <ClCompile Include="..\..\implot_demo.cpp" />
+    <ClCompile Include="..\..\implot_items.cpp" />
+    <ClCompile Include="plot_window.cpp" />
     <ClCompile Include="settings_backend.cpp" />
     <ClCompile Include="settings_window.cpp" />
     <ClCompile Include="main.cpp" />
@@ -177,6 +181,9 @@
     <ClInclude Include="..\..\imgui_internal.h" />
     <ClInclude Include="..\..\backends\imgui_impl_glfw.h" />
     <ClInclude Include="..\..\backends\imgui_impl_vulkan.h" />
+    <ClInclude Include="..\..\implot.h" />
+    <ClInclude Include="..\..\implot_internal.h" />
+    <ClInclude Include="plot_window.h" />
     <ClInclude Include="settings_backend.h" />
     <ClInclude Include="settings_window.h" />
   </ItemGroup>
