@@ -423,7 +423,7 @@ enum ImPlotMarker_ {
 
 // Built-in colormaps
 enum ImPlotColormap_ {
-    ImPlotColormap_Deep     = 0,   // a.k.a. seaborn deep             (qual=true,  n=10) (default)
+    ImPlotColormap_Deep     = 15,  // a.k.a. seaborn deep             (qual=true,  n=10) 
     ImPlotColormap_Dark     = 1,   // a.k.a. matplotlib "Set1"        (qual=true,  n=9 )
     ImPlotColormap_Pastel   = 2,   // a.k.a. matplotlib "Pastel1"     (qual=true,  n=9 )
     ImPlotColormap_Paired   = 3,   // a.k.a. matplotlib "Paired"      (qual=true,  n=12)
@@ -438,7 +438,7 @@ enum ImPlotColormap_ {
     ImPlotColormap_BrBG     = 12,  // brown/blue-green, Color Brewer  (qual=false, n=11)
     ImPlotColormap_PiYG     = 13,  // pink/yellow-green, Color Brewer (qual=false, n=11)
     ImPlotColormap_Spectral = 14,  // color spectrum, Color Brewer    (qual=false, n=11)
-    ImPlotColormap_Greys    = 15,  // white/black                     (qual=false, n=2 )
+    ImPlotColormap_Greys    = 0,   // white/black                     (qual=false, n=2 ) (default)
 };
 
 // Used to position items on a plot (e.g. legends, labels, etc.)

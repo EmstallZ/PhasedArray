@@ -1,5 +1,6 @@
 #include <imgui.h>
 #include <implot.h>
+#include <iostream>
 
 namespace PlotWindow
 {
@@ -18,6 +19,7 @@ namespace PlotWindow
     static bool unsaved_document = false;
     static bool defaultWindowPosition = false;
 
+    bool isColormapChanged = false;
 
     void RenderPlotWindow()
     {
@@ -37,6 +39,41 @@ namespace PlotWindow
 
         // Plot window
         ImGui::Begin("Plot", NULL, window_flags);
+
+        // Create plot window
+        static float plotHeight = ImGui::GetContentRegionAvail().y - 50 - ImGui::GetStyle().ItemSpacing.y;
+        if (ImPlot::BeginPlot("Plot", ImVec2(ImGui::GetContentRegionAvail().x - 64 - ImGui::GetStyle().ItemSpacing.x, plotHeight)))
+        {
+            ImPlot::EndPlot();
+        }
+
+
+        static bool reverseColormap = false;
+        static ImPlotColormapScaleFlags colormapFlags = 0;
+        static double colormapMinValue = -10, colormapMaxValue = 10;
+        ImGui::SameLine(); ImPlot::ColormapScale("##HeatScale", reverseColormap ? colormapMaxValue : colormapMinValue, reverseColormap ? colormapMinValue : colormapMaxValue, ImVec2(0, plotHeight), "%g", colormapFlags);
+
+        ImGui::Separator();
+
+        ImGui::SetNextItemWidth(128);
+        ImPlot::ShowColormapSelector("Select colormap");
+
+        ImGui::SameLine();
+        ImGui::Checkbox("Reverse heatmap", &reverseColormap);
+        if (reverseColormap)
+        {
+            colormapFlags |= ImPlotColormapScaleFlags_Invert;
+        }
+        else
+        {
+            colormapFlags = 0;
+        }
+
+        // TODO: add auto adjust colormap scale value button
+        // TODO: add manual colormap scale value slider
+        // TODO: add ImVec2 to element class
+        // TODO: center plotimage at 0,0
+        
 
         ImPlot::ShowDemoWindow();
 
