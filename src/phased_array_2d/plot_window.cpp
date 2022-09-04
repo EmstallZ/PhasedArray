@@ -1,6 +1,7 @@
 #include <imgui.h>
 #include <implot.h>
 #include <iostream>
+#include "plot_window.h"
 
 namespace PlotWindow
 {
@@ -20,6 +21,10 @@ namespace PlotWindow
     static bool defaultWindowPosition = false;
 
     bool isColormapChanged = false;
+
+    void InitializePlotWindow() {
+        ImPlot::GetStyle().Colormap = ImPlotColormap_Hot;
+    }
 
     void RenderPlotWindow()
     {
