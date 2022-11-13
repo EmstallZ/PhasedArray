@@ -42,7 +42,7 @@ Element::Element(std::string name, int uniqueID)
 {
     Element::phase = 0;
     Element::amplitude = 1;
-    Element::frequency = 1 * M_PI;
+    Element::frequency = 1 * (float)M_PI;
     Element::active = true;
     Element::name = name;
     Element::uniqueID = uniqueID;

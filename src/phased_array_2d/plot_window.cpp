@@ -1,6 +1,5 @@
-#include <imgui.h>
-#include <implot.h>
-#include <iostream>
+#define _USE_MATH_DEFINES
+
 #include "plot_window.h"
 
 namespace PlotWindow
@@ -23,6 +22,7 @@ namespace PlotWindow
     bool isColormapChanged = false;
 
     void InitializePlotWindow() {
+        // Change default colourmap 
         ImPlot::GetStyle().Colormap = ImPlotColormap_Hot;
     }
 
@@ -44,19 +44,45 @@ namespace PlotWindow
 
         // Plot window
         ImGui::Begin("Plot", NULL, window_flags);
+        ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
+
+        // Variables to reverse colormap 
+        static bool reverseColormap = false;
+        static ImPlotColormapScaleFlags colormapFlags = 0;
+        static double colormapMinValue = -2, colormapMaxValue = 2;
+        double colormapMin = reverseColormap ? colormapMaxValue : colormapMinValue;
+        double colormapMax = reverseColormap ? colormapMinValue : colormapMaxValue;
 
         // Create plot window
         static float plotHeight = ImGui::GetContentRegionAvail().y - 50 - ImGui::GetStyle().ItemSpacing.y;
-        if (ImPlot::BeginPlot("Plot", ImVec2(ImGui::GetContentRegionAvail().x - 64 - ImGui::GetStyle().ItemSpacing.x, plotHeight)))
+        if (ImPlot::BeginPlot("##Plot", ImVec2(ImGui::GetContentRegionAvail().x - 64 - ImGui::GetStyle().ItemSpacing.x, plotHeight), ImPlotFlags_NoTitle|ImPlotFlags_Equal))
         {
+            static int plotSize = 200;
+
+
+            if (SettingsMenu::elementArray.size() >= 2)
+            {
+                std::vector<float> myArray;
+                for (int i = 0; i < plotSize; i++)
+                {
+                    for (int j = 0; j < plotSize; j++)
+                    {
+                        // The commented line below has a typo in it, but it has some cool effects nonetheless :)
+                        //myArray.push_back(sin(j * *SettingsMenu::elementArray[0].getFrequencyPointer() / 100) + *SettingsMenu::elementArray[0].getPhasePointer() + sin(i * *SettingsMenu::elementArray[0].getFrequencyPointer() / 100) + *SettingsMenu::elementArray[0].getPhasePointer());
+
+                        // Sine wave plotted on the X and Y axis
+                        myArray.push_back((*SettingsMenu::elementArray[0].getAmplitudePointer() * sin((j * *SettingsMenu::elementArray[0].getFrequencyPointer() / 100) + *SettingsMenu::elementArray[0].getPhasePointer())) + (*SettingsMenu::elementArray[1].getAmplitudePointer() * sin((i * *SettingsMenu::elementArray[1].getFrequencyPointer() / 100) + +*SettingsMenu::elementArray[1].getPhasePointer())));
+                    }
+                }
+
+                ImPlot::PlotHeatmap("Heatmap", myArray.data(), plotSize, plotSize, colormapMin, colormapMax, NULL);
+            }
+
             ImPlot::EndPlot();
         }
 
-
-        static bool reverseColormap = false;
-        static ImPlotColormapScaleFlags colormapFlags = 0;
-        static double colormapMinValue = -10, colormapMaxValue = 10;
-        ImGui::SameLine(); ImPlot::ColormapScale("##HeatScale", reverseColormap ? colormapMaxValue : colormapMinValue, reverseColormap ? colormapMinValue : colormapMaxValue, ImVec2(0, plotHeight), "%g", colormapFlags);
+        // Colormap scale
+        ImGui::SameLine(); ImPlot::ColormapScale("##HeatScale", colormapMin, colormapMax, ImVec2(0, plotHeight), "%g", colormapFlags);
 
         ImGui::Separator();
 
@@ -80,7 +106,7 @@ namespace PlotWindow
         // TODO: center plotimage at 0,0
         
 
-        ImPlot::ShowDemoWindow();
+        //ImPlot::ShowDemoWindow();
 
         ImGui::End();
     }

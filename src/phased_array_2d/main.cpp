@@ -21,7 +21,7 @@
 #include <implot.h>         // create/destroy context
 
 // Application include
-#include "settings_window.h";
+#include "settings_window.h"
 #include "plot_window.h"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -476,8 +476,6 @@ int main(int, char**)
     }
 
     // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Initialize application

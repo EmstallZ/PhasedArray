@@ -1,9 +1,4 @@
 #include "settings_window.h"
-#include "settings_backend.h"
-#include "imgui.h"
-#include <vector>
-#include <string>
-#include <iterator>
 
 namespace SettingsMenu
 {
