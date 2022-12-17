@@ -55,27 +55,35 @@ namespace PlotWindow
 
         // Create plot window
         static float plotHeight = ImGui::GetContentRegionAvail().y - 50 - ImGui::GetStyle().ItemSpacing.y;
-        if (ImPlot::BeginPlot("##Plot", ImVec2(ImGui::GetContentRegionAvail().x - 64 - ImGui::GetStyle().ItemSpacing.x, plotHeight), ImPlotFlags_NoTitle|ImPlotFlags_Equal))
+        if (ImPlot::BeginPlot("##Plot", ImVec2(ImGui::GetContentRegionAvail().x - 64 - ImGui::GetStyle().ItemSpacing.x, plotHeight), ImPlotFlags_NoTitle | ImPlotFlags_Equal | ImPlotFlags_NoLegend))
         {
-            static int plotSize = 200;
-
-
-            if (SettingsMenu::elementArray.size() >= 2)
+            static double timeShift;
+            int ms = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+            static int oldms = 0;
+            // Add time (phase) shift to make the wave 'move'
+            if (ms - oldms >= 10)
             {
-                std::vector<float> myArray;
-                for (int i = 0; i < plotSize; i++)
-                {
-                    for (int j = 0; j < plotSize; j++)
-                    {
-                        // The commented line below has a typo in it, but it has some cool effects nonetheless :)
-                        //myArray.push_back(sin(j * *SettingsMenu::elementArray[0].getFrequencyPointer() / 100) + *SettingsMenu::elementArray[0].getPhasePointer() + sin(i * *SettingsMenu::elementArray[0].getFrequencyPointer() / 100) + *SettingsMenu::elementArray[0].getPhasePointer());
+                timeShift += 0.05;
+                oldms = ms;
+            }
 
-                        // Sine wave plotted on the X and Y axis
-                        myArray.push_back((*SettingsMenu::elementArray[0].getAmplitudePointer() * sin((j * *SettingsMenu::elementArray[0].getFrequencyPointer() / 100) + *SettingsMenu::elementArray[0].getPhasePointer())) + (*SettingsMenu::elementArray[1].getAmplitudePointer() * sin((i * *SettingsMenu::elementArray[1].getFrequencyPointer() / 100) + +*SettingsMenu::elementArray[1].getPhasePointer())));
+            constexpr int plotSize = 200;
+            static double plotArray[plotSize * plotSize];
+            if (SettingsMenu::elementArray.size() >= 1)
+            {
+                Element firstElement = SettingsMenu::elementArray[0];
+                for (int y = 0; y < plotSize; y++) {
+                    for (int x = 0; x < plotSize; x++) {
+                        ImVec2 elementPos(0.5, 0.5);
+
+                        // Comment out the line below if you dont want the wave ontop of your mouse
+                        elementPos = ImVec2(static_cast<float>(ImPlot::GetPlotMousePos().x), static_cast<float>(1.0 - ImPlot::GetPlotMousePos().y));
+
+                        double elementDistance = std::sqrt(std::pow(y - (plotSize * elementPos.y), 2) + std::pow(x - (plotSize * elementPos.x), 2));
+                        plotArray[(y * plotSize) + x] = *firstElement.getAmplitudePointer() * std::sin(2 * M_PI * *firstElement.getFrequencyPointer() * elementDistance / plotSize + *firstElement.getPhasePointer() - timeShift);
                     }
                 }
-
-                ImPlot::PlotHeatmap("Heatmap", myArray.data(), plotSize, plotSize, colormapMin, colormapMax, NULL);
+                ImPlot::PlotHeatmap("Heatmap", plotArray, plotSize, plotSize, colormapMin, colormapMax, nullptr);
             }
 
             ImPlot::EndPlot();
@@ -102,9 +110,12 @@ namespace PlotWindow
 
         // TODO: add auto adjust colormap scale value button
         // TODO: add manual colormap scale value slider
-        // TODO: add ImVec2 to element class
+        // TODO: add ImVec2 to element class for its position
         // TODO: center plotimage at 0,0
-        
+        // TODO: add multiple selectable plots
+        // TODO: add pause checkbox for the time shift
+        // TODO: add parallelization when adding multiple arrays, or even better, when calculating the plot itself
+
 
         //ImPlot::ShowDemoWindow();
 

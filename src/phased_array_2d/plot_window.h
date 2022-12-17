@@ -5,6 +5,7 @@
 #include <vector>
 #include <math.h>
 #include "settings_window.h"
+#include <chrono>
 
 namespace PlotWindow {
     void InitializePlotWindow();
