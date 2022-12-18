@@ -1,9 +1,4 @@
 #include "settings_window.h"
-#include "settings_backend.h"
-#include "imgui.h"
-#include <vector>
-#include <string>
-#include <iterator>
 
 namespace SettingsMenu
 {
@@ -127,7 +122,7 @@ namespace SettingsMenu
             ImGui::SameLine(); HelpMarker("CTRL+click to input value");
 
             // Slider limits and step sizes
-            const float lim_amplitudeLow = 0.0f, lim_amplitudeHigh = 100.0f;
+            const float lim_amplitudeLow = 0.0f, lim_amplitudeHigh = 10.0f;
 
             ImGui::SliderScalar("Amplitude", ImGuiDataType_Float, elementArray[selectedElement].getAmplitudePointer(), &lim_amplitudeLow, &lim_amplitudeHigh, "%.02f", ImGuiSliderFlags_None);
             ImGui::SameLine(); HelpMarker("CTRL+click to input value");

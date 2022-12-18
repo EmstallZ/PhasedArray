@@ -18,9 +18,11 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
+#include <implot.h>         // create/destroy context
 
 // Application include
-#include "settings_window.h";
+#include "settings_window.h"
+#include "plot_window.h"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -31,7 +33,7 @@
 
 //#define IMGUI_UNLIMITED_FRAME_RATE
 #ifdef _DEBUG
-#define IMGUI_VULKAN_DEBUG_REPORT
+//#define IMGUI_VULKAN_DEBUG_REPORT
 #endif
 
 static VkAllocationCallbacks*   g_Allocator = NULL;
@@ -389,6 +391,7 @@ int main(int, char**)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -473,9 +476,10 @@ int main(int, char**)
     }
 
     // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    // Initialize application
+    PlotWindow::InitializePlotWindow();
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -508,6 +512,7 @@ int main(int, char**)
 
         // Application
         SettingsMenu::RenderSettingsMenu();
+        PlotWindow::RenderPlotWindow();
 
         // Rendering
         ImGui::Render();
@@ -537,6 +542,7 @@ int main(int, char**)
     check_vk_result(err);
     ImGui_ImplVulkan_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 
     CleanupVulkanWindow();
